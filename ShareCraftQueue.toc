@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Share Craft Queue
+## Notes: Mail a crafting queue
+## Author: ctdean
+## Version: 1.0
+## SavedVariables: ShareCraftQueueDB
+embeds.xml
+ShareCraftQueue.lua
