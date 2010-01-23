@@ -13,7 +13,7 @@ be crafted.
     /scq list -- list all the items that are being tracked
     /scq add count name -- track this item
     /scq rm name -- don't track this item
-    /scq rmall name -- don't track this item
+    /scq rmall name -- remove all tracked items
     /scq queue count name -- add count items to the queue
     /scq reset -- empty the queue
     /scq scan -- reset and add tracked items to the queue
