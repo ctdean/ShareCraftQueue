@@ -3,6 +3,7 @@
 ## Notes: Mail a crafting queue
 ## Author: ctdean
 ## Version: 1.0
+## Dependencies: QuickAuctions
 ## SavedVariables: ShareCraftQueueDB
 embeds.xml
 ShareCraftQueue.lua
