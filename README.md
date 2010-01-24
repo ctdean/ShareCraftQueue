@@ -13,13 +13,14 @@ be crafted.
     /scq list -- list all the items that are being tracked
     /scq add count name -- track this item
     /scq rm name -- don't track this item
-    /scq rmall name -- remove all tracked items
+    /scq rmall -- remove all tracked items
     /scq queue count name -- add count items to the queue
     /scq reset -- empty the queue
     /scq scan -- reset and add tracked items to the queue
     /scq show -- show the crafting queue
     /scq add-glyphs count -- track all the glyphs
     /scq read -- read the mail message
+    /scq insert-craft -- Add our queue to the QA crafting queue
 
 /scq scan will examine your bags, bank, and auction house (if you have
 the AH targeted) and add missing tracked items to the queue.

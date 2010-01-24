@@ -47,14 +47,14 @@ function ShareCraftQueue:Help()
     ShareCraftQueue:Print( "/scq list -- list all the items that are being tracked" )
     ShareCraftQueue:Print( "/scq add count name -- track this item" )
     ShareCraftQueue:Print( "/scq rm name -- don't track this item" )
-    ShareCraftQueue:Print( "/scq rmall name -- remove all tracked items" )
+    ShareCraftQueue:Print( "/scq rmall -- remove all tracked items" )
     ShareCraftQueue:Print( "/scq queue count name -- add count items to the queue" )
     ShareCraftQueue:Print( "/scq reset -- empty the queue" )
     ShareCraftQueue:Print( "/scq scan -- add tracked items to the queue" )
     ShareCraftQueue:Print( "/scq show -- show the crafting queue" )
     ShareCraftQueue:Print( "/scq add-glyphs count -- track all the glyphs" )
-    ShareCraftQueue:Print( "/scq read -- read the mail message" )
-
+    ShareCraftQueue:Print( "/scq read -- read any mail and add items to the queue" )
+    ShareCraftQueue:Print( "/scq insert-craft -- Add our queue to the QA crafting queue" )
 end
 
 function ShareCraftQueue:ItemSummary( link )
@@ -207,18 +207,35 @@ end
 
 function ShareCraftQueue:ReadMail()
     local ninbox, total = GetInboxNumItems()
+    local nadded = 0
     for i = 1, ninbox do
         local _, _, _, subject = GetInboxHeaderInfo( i )
         if( subject == SHARE_SUBJECT ) then
             local body = GetInboxText( i )
             for itemstr, count in string.gmatch( body, "(item:%d+) => (%d+)" ) do
                 local _, link = GetItemInfo( itemstr )
-                local cur = QuickAuctions.db.realm.craftQueue[link]
-                QuickAuctions.db.realm.craftQueue[link] = (cur or 0) + tonumber( count )
+                if( link ) then
+                    local cur = self.db.profile.queue[link]
+                    self.db.profile.queue[link] = (cur or 0) + tonumber( count )
+                    nadded = nadded + 1
+                end
             end
-            self:Print( "added to QA" )
+            self:Print( string.format( "added %s entries to queue", nadded ) )
         end
     end
+end
+
+function ShareCraftQueue:InsertCraft()
+    local nadded = 0
+    for i, link in pairs(self:ValidQueued()) do
+        local n = self.db.profile.queue[link]
+        local itemstr = self:LinkToShortItem( link )
+        local cur = QuickAuctions.db.realm.craftQueue[itemstr]
+        QuickAuctions.db.realm.craftQueue[itemstr] = (cur or 0) + n
+        nadded = nadded + 1 
+    end
+
+    self:Print( string.format( "added %s entries to QA queue", nadded ) )
 end
 
 SLASH_SHARECRAFTQUEUE1 = "/scq"
@@ -249,6 +266,8 @@ SlashCmdList["SHARECRAFTQUEUE"] = function( msg )
         ShareCraftQueue:AddGlyphs( arg )
     elseif( cmd == "read" ) then
         ShareCraftQueue:ReadMail()
+    elseif( cmd == "insert-craft" ) then
+        ShareCraftQueue:InsertCraft()
     else
         ShareCraftQueue:Help()
     end
